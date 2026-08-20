@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Stacks — Vinyl Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #17140f;
+    --bg-alt: #1f1a13;
+    --sleeve: #ece2cc;
+    --sleeve-dim: #d9cbaa;
+    --ink: #2a2318;
+    --paper-text: #f5efe0;
+    --paper-text-dim: #b8ac93;
+    --amber: #c9932a;
+    --amber-bright: #e0aa3d;
+    --rust: #a8452f;
+    --rust-bright: #c25539;
+    --teal: #3f6e64;
+    --line: rgba(245,239,224,0.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(201,147,42,0.06), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(168,69,47,0.05), transparent 45%);
+    color: var(--paper-text);
+    font-family: 'Fraunces', Georgia, serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap{ max-width: 1180px; margin: 0 auto; padding: 28px 20px 80px; }
+
+  /* Header */
+  header{
+    display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px;
+    padding-bottom: 22px; margin-bottom: 26px;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand-mark{ display:flex; align-items:center; gap:14px; }
+  .disc{
+    width:46px; height:46px; border-radius:50%;
+    background: repeating-radial-gradient(circle at center, #0c0a07 0px, #0c0a07 2px, #24201a 3px, #24201a 4px);
+    position:relative; flex-shrink:0;
+    box-shadow: 0 0 0 1px rgba(245,239,224,0.08);
+  }
+  .disc::after{
+    content:''; position:absolute; inset:0; margin:auto; width:16px; height:16px; border-radius:50%;
+    background: var(--rust); box-shadow: inset 0 0 0 4px #0c0a07;
+  }
+  h1{
+    font-family:'Bebas Neue', sans-serif;
+    font-size: 42px; letter-spacing: 3px; line-height:1;
+    margin:0; color: var(--paper-text); font-weight:400;
+  }
+  .tagline{ font-size:13px; color:var(--paper-text-dim); letter-spacing:0.4px; margin-top:4px; font-style:italic;}
+  .header-actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .sheet-link{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--paper-text-dim);
+    text-decoration:none; border:1px solid var(--line); padding:8px 12px; border-radius:3px;
+    letter-spacing:0.5px; transition: all .15s ease;
+  }
+  .sheet-link:hover{ border-color: var(--amber); color: var(--amber-bright); }
+
+  /* Stats bar */
+  .stats{
+    display:flex; gap:0; margin-bottom:26px; border:1px solid var(--line); border-radius:4px; overflow:hidden;
+  }
+  .stat{ flex:1; padding:14px 18px; border-right:1px solid var(--line); }
+  .stat:last-child{ border-right:none; }
+  .stat .num{ font-family:'IBM Plex Mono', monospace; font-size:24px; color:var(--amber-bright); font-weight:600; }
+  .stat .label{ font-size:11px; color:var(--paper-text-dim); text-transform:uppercase; letter-spacing:1px; margin-top:2px;}
+
+  /* Controls */
+  .controls{
+    display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom: 22px;
+  }
+  .search-box{
+    flex:1; min-width:220px; position:relative;
+  }
+  .search-box input{
+    width:100%; background: var(--bg-alt); border:1px solid var(--line); color:var(--paper-text);
+    padding:11px 14px; border-radius:3px; font-family:'Fraunces',serif; font-size:15px;
+  }
+  .search-box input:focus{ outline:none; border-color:var(--amber); }
+  .search-box input::placeholder{ color: var(--paper-text-dim); }
+
+  .divider-tabs{ display:flex; gap:6px; flex-wrap:wrap; }
+  .tab{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.8px; text-transform:uppercase;
+    padding:9px 14px; border:1px solid var(--line); border-radius:3px; cursor:pointer; background:transparent;
+    color:var(--paper-text-dim); transition: all .15s ease;
+  }
+  .tab:hover{ border-color: var(--amber); color: var(--paper-text); }
+  .tab.active{ background: var(--amber); border-color: var(--amber); color: #17140f; font-weight:600; }
+
+  select{
+    background: var(--bg-alt); border:1px solid var(--line); color:var(--paper-text);
+    padding:10px 12px; border-radius:3px; font-family:'IBM Plex Mono', monospace; font-size:12px; cursor:pointer;
+  }
+
+  .add-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.8px; text-transform:uppercase;
+    padding:11px 20px; border-radius:3px; border:1px solid var(--rust); background:var(--rust); color:#f5efe0;
+    cursor:pointer; font-weight:600; transition: all .15s ease; white-space:nowrap;
+  }
+  .add-btn:hover{ background: var(--rust-bright); border-color:var(--rust-bright); }
+
+  /* Grid */
+  .count-line{ font-size:12px; color:var(--paper-text-dim); margin-bottom:14px; font-family:'IBM Plex Mono', monospace; letter-spacing:0.4px;}
+  .grid{
+    display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:16px;
+  }
+  .card{
+    background: var(--sleeve); border-radius:4px; padding:16px 16px 14px; position:relative; overflow:hidden;
+    color: var(--ink); cursor:default; transition: transform .18s ease, box-shadow .18s ease;
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .card:hover{ transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.35); }
+  .card::before{
+    content:''; position:absolute; top:-30px; right:-30px; width:90px; height:90px; border-radius:50%;
+    background: repeating-radial-gradient(circle at center, #0c0a07 0px, #0c0a07 1.5px, transparent 2px, transparent 4px);
+    opacity:0; transition: opacity .18s ease, transform .5s ease;
+    transform: rotate(0deg);
+  }
+  .card:hover::before{ opacity:0.85; transform: rotate(75deg); }
+  .card-year{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; color: var(--rust); font-weight:600; letter-spacing:0.5px;
+  }
+  .card-artist{
+    font-family:'Bebas Neue', sans-serif; font-size:20px; letter-spacing:0.5px; line-height:1.05; margin-top:6px;
+    color: var(--ink);
+  }
+  .card-title{
+    font-size:14px; font-style:italic; color:#4a4030; margin-top:3px; line-height:1.3;
+  }
+  .card-footer{
+    display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:10px;
+    border-top: 1px dashed rgba(0,0,0,0.15);
+  }
+  .badge{
+    font-family:'IBM Plex Mono', monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:0.6px;
+    padding:3px 7px; border-radius:2px; font-weight:600;
+  }
+  .badge.vinyl{ background:rgba(63,110,100,0.18); color:#2d5048; }
+  .badge.cd{ background:rgba(168,69,47,0.15); color:#8a3a26; }
+  .badge.box{ background:rgba(201,147,42,0.2); color:#8a651c; }
+  .badge.wishlist{ background:rgba(168,69,47,0.9); color:#f5efe0; }
+  .badge.collection{ background:rgba(63,110,100,0.9); color:#f5efe0; }
+  .list-badge{ font-family:'IBM Plex Mono', monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:0.6px; padding:3px 7px; border-radius:2px; }
+
+  .empty{
+    text-align:center; padding: 60px 20px; color: var(--paper-text-dim);
+  }
+  .empty .disc{ margin: 0 auto 18px; width:60px; height:60px; }
+  .empty .disc::after{ width:20px; height:20px; }
+  .empty h3{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; color:var(--paper-text); margin:0 0 6px; }
+
+  /* Modal */
+  .modal-overlay{
+    position:fixed; inset:0; background: rgba(10,8,5,0.75); backdrop-filter: blur(3px);
+    display:none; align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal{
+    background: var(--sleeve); color: var(--ink); border-radius:6px; width:100%; max-width:460px;
+    padding: 28px 26px 24px; position:relative; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+  }
+  .modal-tape{
+    position:absolute; top:-10px; left:50%; transform:translateX(-50%) rotate(-2deg);
+    width:90px; height:26px; background: rgba(201,147,42,0.55); border:1px solid rgba(0,0,0,0.05);
+  }
+  .modal h2{
+    font-family:'Bebas Neue', sans-serif; font-size:26px; letter-spacing:1px; margin:6px 0 18px; color:var(--ink);
+  }
+  .field{ margin-bottom:14px; }
+  .field label{
+    display:block; font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase;
+    letter-spacing:0.8px; color:#6b5f47; margin-bottom:5px;
+  }
+  .field input, .field select{
+    width:100%; padding:10px 11px; border-radius:3px; border:1px solid rgba(0,0,0,0.18);
+    background: #fbf7ec; font-family:'Fraunces',serif; font-size:14.5px; color:var(--ink);
+  }
+  .field input:focus, .field select:focus{ outline:none; border-color:var(--rust); }
+  .field-row{ display:flex; gap:12px; }
+  .field-row .field{ flex:1; }
+  .modal-actions{ display:flex; gap:10px; margin-top:20px; }
+  .btn-primary{
+    flex:1; background: var(--rust); color:#f5efe0; border:none; padding:12px; border-radius:3px;
+    font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.8px;
+    font-weight:600; cursor:pointer; transition: background .15s ease;
+  }
+  .btn-primary:hover{ background: var(--rust-bright); }
+  .btn-secondary{
+    background: transparent; color:#6b5f47; border:1px solid rgba(0,0,0,0.18); padding:12px 18px; border-radius:3px;
+    font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.8px;
+    cursor:pointer;
+  }
+  .modal-close{
+    position:absolute; top:14px; right:14px; background:none; border:none; font-size:20px; color:#8a7f66;
+    cursor:pointer; line-height:1; padding:4px;
+  }
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); opacity:0;
+    background: var(--teal); color:#f5efe0; padding:12px 22px; border-radius:4px; font-size:13px;
+    font-family:'IBM Plex Mono', monospace; letter-spacing:0.4px; transition: all .25s ease; z-index:200;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); pointer-events:none;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  footer{
+    margin-top: 50px; padding-top: 20px; border-top:1px solid var(--line);
+    font-size:11px; color: var(--paper-text-dim); font-family:'IBM Plex Mono', monospace;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+  a{ color: inherit; }
+
+  @media (max-width:560px){
+    h1{ font-size:32px; }
+    .stats{ flex-wrap:wrap; }
+    .stat{ flex:1 1 50%; border-bottom:1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand-mark">
+      <div class="disc"></div>
+      <div>
+        <h1>THE STACKS</h1>
+        <div class="tagline">a personal crate, digitized</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="sheet-link" id="resetBtn" style="cursor:pointer;">↺ reset data</button>
+      <a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1oR_Y4_yURp0VoEJPoFu1vZKd3VZoF8d_a9g9AELuhdw/edit" target="_blank" rel="noopener">↗ open source sheet</a>
+    </div>
+  </header>
+
+  <div class="stats" id="statsBar"></div>
+
+  <div class="controls">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search artist or title…" />
+    </div>
+    <div class="divider-tabs" id="listTabs"></div>
+    <select id="decadeFilter">
+      <option value="all">All decades</option>
+    </select>
+    <select id="sortSelect">
+      <option value="artist">Sort: Artist A–Z</option>
+      <option value="year">Sort: Year</option>
+      <option value="dateAdded">Sort: Recently added</option>
+    </select>
+    <button class="add-btn" id="openAddBtn">+ Add to the crate</button>
+  </div>
+
+  <div class="count-line" id="countLine"></div>
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    <span>Data stored locally in this app · originally seeded from your Google Sheet</span>
+    <span id="lastSync"></span>
+  </footer>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-tape"></div>
+    <button class="modal-close" id="closeModal">×</button>
+    <h2>New arrival</h2>
+    <form id="addForm">
+      <div class="field">
+        <label>Artist</label>
+        <input type="text" id="fArtist" required placeholder="e.g. The Cure" />
+      </div>
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="fTitle" required placeholder="e.g. Disintegration" />
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Year</label>
+          <input type="text" id="fYear" placeholder="1989" />
+        </div>
+        <div class="field">
+          <label>Format</label>
+          <select id="fFormat">
+            <option>Vinyl</option>
+            <option>CD</option>
+            <option>Box Set</option>
+            <option>Cassette</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>List</label>
+        <select id="fList">
+          <option value="collection">Collection</option>
+          <option value="wishlist">Wishlist</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="cancelAdd">Cancel</button>
+        <button type="submit" class="btn-primary">Add record</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SEED_RECORDS = [{"id": "r0", "date": "2020-08-29", "artist": "A Flock Of Seagulls", "title": "A Flock Of Seagulls", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r1", "date": "2021-05-29", "artist": "ABC", "title": "Lexicon Of Love", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r2", "date": "2021-05-29", "artist": "ABC", "title": "Beauty Stab", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r3", "date": "2022-01-02", "artist": "ABC", "title": "How To Be A Zillionaire!", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r4", "date": "2022-03-16", "artist": "Adam And Ants", "title": "Kings Of Wild Frontier", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r5", "date": "2022-03-16", "artist": "Adam And Ants", "title": "Prince Charming", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r6", "date": "2022-03-16", "artist": "Adam Ant", "title": "Friend Or Foe", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r7", "date": "2021-05-29", "artist": "Adam Ant", "title": "Vive Le Rock", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r8", "date": "2021-05-29", "artist": "Alphaville", "title": "Forever Young", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r9", "date": "2021-05-29", "artist": "B-52's", "title": "B-52's", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r10", "date": "2021-05-29", "artist": "B-52's", "title": "Wild  Planet", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r11", "date": "2021-05-29", "artist": "B-52's", "title": "Party Mix!", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r12", "date": "2022-01-02", "artist": "B-52's", "title": "Mesopotamia", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r13", "date": "2021-05-29", "artist": "B-52's", "title": "Whammy!", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r14", "date": "2021-05-29", "artist": "B-52's", "title": "Rock Lobster", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r15", "date": "2021-05-29", "artist": "Bananarama", "title": "Greatest Hits Collection", "format": "Vinyl", "year": "1988", "list": "collection"}, {"id": "r16", "date": "2021-05-29", "artist": "Bangles", "title": "Different Light", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r17", "date": "2021-05-29", "artist": "Beastie Boys", "title": "Licensed To Ill", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r18", "date": "2021-05-29", "artist": "Beastie Boys", "title": "Paul's Boutique", "format": "Vinyl", "year": "1989", "list": "collection"}, {"id": "r19", "date": "2021-05-29", "artist": "Beastie Boys", "title": "Check Your Head", "format": "Vinyl", "year": "1992", "list": "collection"}, {"id": "r20", "date": "2021-05-29", "artist": "Beck", "title": "Midnite Vultures", "format": "Vinyl", "year": "2000", "list": "collection"}, {"id": "r21", "date": "2021-05-29", "artist": "Beck", "title": "Odelay", "format": "Vinyl", "year": "2016", "list": "collection"}, {"id": "r22", "date": "2021-05-29", "artist": "Belinda Carlisle", "title": "Belinda", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r23", "date": "2021-05-29", "artist": "Berlin", "title": "Pleasure Victim", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r24", "date": "2021-05-29", "artist": "Berlin", "title": "Love Life", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r25", "date": "2021-05-29", "artist": "Big Audio", "title": "Higher Power", "format": "Vinyl", "year": "1994", "list": "collection"}, {"id": "r26", "date": "2021-05-29", "artist": "Big Audio Dynamite", "title": "This Is Big Audio Dynamite", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r27", "date": "2021-05-29", "artist": "Big Audio Dynamite", "title": "Bottom Line", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r28", "date": "2021-05-29", "artist": "Big Audio Dynamite", "title": "No. 10, Upping St.", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r29", "date": "2023-04-08", "artist": "Big Audio Dynamite", "title": "C'mon Every Beatbox", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r30", "date": "2021-05-29", "artist": "Big Audio Dynamite", "title": "Tighten Up Vol. '88", "format": "Vinyl", "year": "1988", "list": "collection"}, {"id": "r31", "date": "2021-05-29", "artist": "Big Audio Dynamite", "title": "Megatop Phoenix", "format": "Vinyl", "year": "1989", "list": "collection"}, {"id": "r32", "date": "2021-05-29", "artist": "Big Audio Dynamite II", "title": "On Road Live '92", "format": "Vinyl", "year": "2018", "list": "collection"}, {"id": "r33", "date": "2021-05-29", "artist": "Frank Black", "title": "Frank Black", "format": "Vinyl", "year": "2019", "list": "collection"}, {"id": "r34", "date": "2026-04-11", "artist": "Blancmange", "title": "Happy Families", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r35", "date": "2021-05-29", "artist": "Blondie", "title": "Parallel Lines", "format": "Vinyl", "year": "1978", "list": "collection"}, {"id": "r36", "date": "2021-05-29", "artist": "Blondie", "title": "Eat To Beat", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r37", "date": "2021-05-29", "artist": "Blondie", "title": "Autoamerican", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r38", "date": "2021-05-29", "artist": "Blondie", "title": "Best Of Blondie", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r39", "date": "2022-01-02", "artist": "Bob Dylan", "title": "Freewheelin' Bob Dylan", "format": "Vinyl", "year": "2002", "list": "collection"}, {"id": "r40", "date": "2026-05-16", "artist": "David Bowie", "title": "Diamond Dogs", "format": "Vinyl", "year": "1974", "list": "collection"}, {"id": "r41", "date": "2021-05-29", "artist": "David Bowie", "title": "ChangesOneBowie", "format": "Vinyl", "year": "1976", "list": "collection"}, {"id": "r42", "date": "2021-05-29", "artist": "David Bowie", "title": "Scary Monsters", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r43", "date": "2021-05-29", "artist": "David Bowie", "title": "Let's Dance", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r44", "date": "2021-05-29", "artist": "Bronski Beat", "title": "Truthdare Doubledare", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r45", "date": "2021-05-29", "artist": "James Brown", "title": "Live' At Apollo", "format": "Vinyl", "year": "2008", "list": "collection"}, {"id": "r46", "date": "2021-05-29", "artist": "Cars", "title": "Cars", "format": "Vinyl", "year": "1978", "list": "collection"}, {"id": "r47", "date": "2021-05-29", "artist": "Cars", "title": "Candy-O", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r48", "date": "2021-05-29", "artist": "Cars", "title": "Panorama", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r49", "date": "2021-05-29", "artist": "Cars", "title": "Shake It Up", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r50", "date": "2021-05-29", "artist": "Clash", "title": "Give 'Em Enough Rope", "format": "Vinyl", "year": "1978", "list": "collection"}, {"id": "r51", "date": "2021-05-29", "artist": "Clash", "title": "Clash", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r52", "date": "2022-01-03", "artist": "Clash", "title": "Cost Of Living E.P.", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r53", "date": "2021-05-29", "artist": "Clash", "title": "Black Market Clash", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r54", "date": "2021-05-29", "artist": "Clash", "title": "Sandinista!", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r55", "date": "2021-05-29", "artist": "Clash", "title": "Combat Rock", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r56", "date": "2021-05-29", "artist": "Clash", "title": "Rock Casbah", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r57", "date": "2021-05-29", "artist": "Clash", "title": "Cut Crap", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r58", "date": "2021-05-29", "artist": "Clash", "title": "London Calling", "format": "Vinyl", "year": "2013", "list": "collection"}, {"id": "r59", "date": "2021-05-29", "artist": "Clash", "title": "Hits back", "format": "Vinyl", "year": "2013", "list": "collection"}, {"id": "r60", "date": "2021-05-29", "artist": "John Coltrane", "title": "Blue Train", "format": "Vinyl", "year": "2012", "list": "collection"}, {"id": "r61", "date": "2021-05-29", "artist": "Elvis Costello", "title": "My Aim Is True", "format": "Vinyl", "year": "1977", "list": "collection"}, {"id": "r62", "date": "2021-05-29", "artist": "Elvis Costello", "title": "This Year's Model", "format": "Vinyl", "year": "1978", "list": "collection"}, {"id": "r63", "date": "2021-05-29", "artist": "Elvis Costello & Attractions", "title": "Armed Forces", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r64", "date": "2021-05-29", "artist": "Elvis Costello", "title": "Taking Liberties", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r65", "date": "2021-05-29", "artist": "Elvis Costello & Attractions", "title": "Trust", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r66", "date": "2021-05-29", "artist": "Elvis Costello & Attractions", "title": "Punch Clock", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r67", "date": "2021-05-29", "artist": "Elvis Costello", "title": "Spike", "format": "Vinyl", "year": "1989", "list": "collection"}, {"id": "r68", "date": "2021-05-29", "artist": "Crosby, Stills, Nash & Young", "title": "So Far", "format": "Vinyl", "year": "1974", "list": "collection"}, {"id": "r69", "date": "2021-05-29", "artist": "Crowded House", "title": "Crowded House", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r70", "date": "2019-01-01", "artist": "Culture Club", "title": "Colour By Numbers", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r71", "date": "2021-05-29", "artist": "Cure", "title": "Boys Don't Cry", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r72", "date": "2021-05-29", "artist": "Cure", "title": "Hanging Garden(12 inch)", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r73", "date": "2021-05-29", "artist": "Cure", "title": "Japanese Whispers", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r74", "date": "2021-05-29", "artist": "Cure", "title": "Walk", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r75", "date": "2021-05-29", "artist": "Cure", "title": "Head On Door", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r76", "date": "2021-05-29", "artist": "Cure", "title": "Half An Octopuss", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r77", "date": "2023-04-08", "artist": "Cure", "title": "Just Like Heaven", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r78", "date": "2025-02-05", "artist": "Cure", "title": "Kiss me, kiss me, kiss me", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r79", "date": "2025-04-26", "artist": "Cure", "title": "Why Can't I Be You? (12\" Remix)", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r80", "date": "2025-02-01", "artist": "Cure", "title": "Never Enough", "format": "Vinyl", "year": "1990", "list": "collection"}, {"id": "r81", "date": "2023-07-02", "artist": "Cure", "title": "Pornography", "format": "Vinyl", "year": "2008", "list": "collection"}, {"id": "r82", "date": "2021-05-29", "artist": "Cure", "title": "Disintegration", "format": "Vinyl", "year": "2010", "list": "collection"}, {"id": "r83", "date": "2021-05-29", "artist": "Cure", "title": "Seventeen Seconds", "format": "Vinyl", "year": "2016", "list": "collection"}, {"id": "r84", "date": "2021-05-29", "artist": "Cure", "title": "Acoustic Hits", "format": "Vinyl", "year": "2017", "list": "collection"}, {"id": "r85", "date": "2021-05-29", "artist": "Cure", "title": "Greatest Hits", "format": "Vinyl", "year": "2017", "list": "collection"}, {"id": "r86", "date": "2021-05-29", "artist": "Cure", "title": "Mixed Up", "format": "Vinyl", "year": "2018", "list": "collection"}, {"id": "r87", "date": "2021-05-29", "artist": "Cure", "title": "Torn Down: Mixed Up Extras 2018", "format": "Vinyl", "year": "2018", "list": "collection"}, {"id": "r88", "date": "2026-06-30", "artist": "Cure", "title": "Show", "format": "Vinyl", "year": "1992", "list": "collection"}, {"id": "r89", "date": "2025-02-09", "artist": "Cure", "title": "Wish", "format": "Vinyl", "year": "2022", "list": "collection"}, {"id": "r90", "date": "2026-02-01", "artist": "Cure", "title": "Top", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r91", "date": "2021-05-29", "artist": "Miles Davis", "title": "Sketches Of Spain", "format": "Vinyl", "year": "1960", "list": "collection"}, {"id": "r92", "date": "2021-05-29", "artist": "Miles Davis", "title": "Kind Of Blue", "format": "Vinyl", "year": "2016", "list": "collection"}, {"id": "r93", "date": "2025-02-22", "artist": "Miles Davis", "title": "Birth Of Cool", "format": "Vinyl", "year": "2016", "list": "collection"}, {"id": "r94", "date": "2025-07-22", "artist": "De La Soul", "title": "Live At Tramps, NYC, 1996", "format": "Vinyl", "year": "2024", "list": "collection"}, {"id": "r95", "date": "2021-05-29", "artist": "Dead Or Alive", "title": "Rip It Up", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r96", "date": "2026-01-11", "artist": "Depeche Mode", "title": "Speak & Spell", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r97", "date": "2026-01-11", "artist": "Depeche Mode", "title": "A Broken Frame", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r98", "date": "2026-04-11", "artist": "Depeche Mode", "title": "Construction Time Again", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r99", "date": "2021-05-29", "artist": "Depeche Mode", "title": "People Are People", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r100", "date": "2026-04-11", "artist": "Depeche Mode", "title": "Some Great Reward", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r101", "date": "2026-03-07", "artist": "Depeche Mode", "title": "BlackCelebration", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r102", "date": "2026-06-30", "artist": "Depeche Mode", "title": "Music for the Masses", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r103", "date": "2022-01-02", "artist": "Dire Straits", "title": "Brothers In Arms", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r104", "date": "2022-03-16", "artist": "Thomas Dolby", "title": "Blinded By Science", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r105", "date": "2025-01-25", "artist": "Thomas Dolby", "title": "Golden Age Of Wireless", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r106", "date": "2021-05-29", "artist": "Duran Duran", "title": "Rio", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r107", "date": "2021-05-29", "artist": "Duran Duran", "title": "Seven And Ragged Tiger", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r108", "date": "2021-05-29", "artist": "Duran Duran", "title": "Duran Duran", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r109", "date": "2021-05-29", "artist": "Duran Duran", "title": "Arena | Recorded Around World 1984", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r110", "date": "2021-05-29", "artist": "Duran Duran", "title": "Notorious", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r111", "date": "2026-06-30", "artist": "Electronic", "title": "Electronic", "format": "Vinyl", "year": "1991", "list": "collection"}, {"id": "r112", "date": "2021-05-29", "artist": "Beat (2)", "title": "Special Beat Service", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r113", "date": "2021-05-29", "artist": "Beat (2)", "title": "I Just Can't Stop", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r114", "date": "2025-09-20", "artist": "Erasure", "title": "Circus", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r115", "date": "2021-05-29", "artist": "Eurythmics", "title": "Sweet Dreams (Are Made Of This)", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r116", "date": "2022-01-02", "artist": "Eurythmics", "title": "1984.0", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r117", "date": "2022-01-02", "artist": "Eurythmics", "title": "Touch", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r118", "date": "2022-01-02", "artist": "Eurythmics", "title": "Be Yourself Tonight", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r119", "date": "2021-05-29", "artist": "Eurythmics", "title": "Missionary Man", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r120", "date": "2021-05-29", "artist": "Eurythmics", "title": "Revenge", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r121", "date": "2026-04-11", "artist": "Eurythmics", "title": "I Need A Man", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r122", "date": "2021-05-29", "artist": "Falco", "title": "Der Kommissar", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r123", "date": "2022-01-02", "artist": "Falco", "title": "Falco 3", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r124", "date": "2022-01-02", "artist": "Bryan Ferry", "title": "Boys And Girls", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r125", "date": "2021-05-29", "artist": "Bryan Ferry", "title": "Bête Noire", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r126", "date": "2022-01-02", "artist": "Fixx", "title": "Reach Beach", "format": "Vinyl", "year": "", "list": "collection"}, {"id": "r127", "date": "2022-01-02", "artist": "Fixx", "title": "React", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r128", "date": "2022-01-02", "artist": "Frankie Goes To Hollywood", "title": "Relax", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r129", "date": "2021-05-29", "artist": "Frankie Goes To Hollywood", "title": "Welcome To Pleasuredome", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r130", "date": "2025-01-25", "artist": "Frankie Goes To Hollywood", "title": "Two Tribes (Carnage)", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r131", "date": "2026-04-11", "artist": "Frankie Goes To Hollywood", "title": "Liverpool", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r132", "date": "2023-04-07", "artist": "Fun Boy Three", "title": "Fun Boy Three", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r133", "date": "2022-01-02", "artist": "Peter Gabriel", "title": "Security", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r134", "date": "2022-01-02", "artist": "Peter Gabriel", "title": "So", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r135", "date": "2022-01-02", "artist": "General Public", "title": "...All Rage", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r136", "date": "2022-01-02", "artist": "General Public", "title": "hand to Mouth", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r137", "date": "2022-01-02", "artist": "Go-Go's", "title": "Talk Show", "format": "Vinyl", "year": "", "list": "collection"}, {"id": "r138", "date": "2021-05-29", "artist": "Go-Go's", "title": "Beauty And Beat", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r139", "date": "2021-05-29", "artist": "Go-Go's", "title": "Vacation", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r140", "date": "2022-01-02", "artist": "Haircut One Hundred", "title": "Pelican West", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r141", "date": "2022-01-02", "artist": "Daryl Hall & John Oates", "title": "Voices", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r142", "date": "2022-01-02", "artist": "Daryl Hall & John Oates", "title": "Private Eyes", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r143", "date": "2022-01-02", "artist": "Daryl Hall & John Oates", "title": "Rock 'N Soul Part 1", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r144", "date": "2026-01-11", "artist": "Heaven 17", "title": "Heaven 17", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r145", "date": "2022-01-02", "artist": "Herb Alpert & Tijuana Brass", "title": "Whipped Cream & Other Delights", "format": "Vinyl", "year": "1965", "list": "collection"}, {"id": "r146", "date": "2022-01-02", "artist": "Human League", "title": "Dare", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r147", "date": "2022-01-02", "artist": "Human League", "title": "Fascination!", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r148", "date": "2026-04-11", "artist": "Human Sexual Response", "title": "Fig. 14", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r149", "date": "2022-01-02", "artist": "Billy Idol", "title": "Billy Idol", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r150", "date": "2022-01-02", "artist": "Billy Idol", "title": "Vital Idol:Revitalized", "format": "Vinyl", "year": "2018", "list": "collection"}, {"id": "r151", "date": "2022-01-02", "artist": "INXS", "title": "Shabooh Shoobah", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r152", "date": "2022-01-02", "artist": "INXS", "title": "Listen Like Thieves", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r153", "date": "2022-01-02", "artist": "INXS", "title": "Kick", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r154", "date": "2022-01-02", "artist": "INXS", "title": "Swing", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r155", "date": "2025-07-22", "artist": "INXS", "title": "Listen Like Thieves", "format": "Vinyl", "year": "2025", "list": "collection"}, {"id": "r156", "date": "2022-01-02", "artist": "Joe Jackson", "title": "Look Sharp!", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r157", "date": "2022-01-02", "artist": "Joe Jackson", "title": "I'm Man", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r158", "date": "2022-01-02", "artist": "Joe Jackson", "title": "Joe Jackson's Jumpin' Jive", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r159", "date": "2022-01-02", "artist": "Joe Jackson", "title": "Night And Day", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r160", "date": "2022-01-02", "artist": "Joe Jackson", "title": "Body And Soul", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r161", "date": "2022-01-02", "artist": "Jam", "title": "Gift", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r162", "date": "2022-01-02", "artist": "Joan Jett & Blackhearts", "title": "I Love Rock 'N Roll", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r163", "date": "2022-01-02", "artist": "Howard Jones", "title": "Human's Lib", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r164", "date": "2022-01-02", "artist": "Howard Jones", "title": "One To One", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r165", "date": "2026-05-22", "artist": "Led Zeppelin", "title": "Led Zeppelin II", "format": "Vinyl", "year": "1969", "list": "collection"}, {"id": "r166", "date": "2025-01-25", "artist": "Level 42", "title": "World Machine", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r167", "date": "2022-01-02", "artist": "Huey Lewis & News", "title": "Sports", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r168", "date": "2022-01-02", "artist": "Love And Rockets", "title": "Express", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r169", "date": "2022-01-02", "artist": "Men At Work", "title": "Business As Usual", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r170", "date": "2022-01-02", "artist": "Men At Work", "title": "Cargo", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r171", "date": "2022-01-02", "artist": "Midnight Oil", "title": "10, 9, 8, 7, 6, 5, 4, 3, 2, 1", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r172", "date": "2022-01-02", "artist": "Midnight Oil", "title": "Diesel And Dust", "format": "Vinyl", "year": "1988", "list": "collection"}, {"id": "r173", "date": "2022-01-02", "artist": "Midnight Oil", "title": "Blue Sky Mining", "format": "Vinyl", "year": "1990", "list": "collection"}, {"id": "r174", "date": "2022-01-02", "artist": "Steve Miller Band", "title": "Fly Like An Eagle", "format": "Vinyl", "year": "1976", "list": "collection"}, {"id": "r175", "date": "2022-01-02", "artist": "Steve Miller Band", "title": "Book Of Dreams", "format": "Vinyl", "year": "1977", "list": "collection"}, {"id": "r176", "date": "2022-01-02", "artist": "Steve Miller Band", "title": "Greatest Hits 1974-78", "format": "Vinyl", "year": "1978", "list": "collection"}, {"id": "r177", "date": "2022-01-02", "artist": "Missing Persons", "title": "Spring Session M", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r178", "date": "2022-01-02", "artist": "Motels", "title": "All Four One", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r179", "date": "2022-01-02", "artist": "Motels", "title": "Little Robbers", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r180", "date": "2022-01-02", "artist": "Naked Eyes", "title": "Naked Eyes", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r181", "date": "2022-01-02", "artist": "New Order", "title": "Low-life", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r182", "date": "2023-04-22", "artist": "New Order", "title": "Power, Corruption & Lies", "format": "Vinyl", "year": "2009", "list": "collection"}, {"id": "r183", "date": "2023-04-22", "artist": "New Order", "title": "Ceremony", "format": "Vinyl", "year": "2019", "list": "collection"}, {"id": "r184", "date": "2022-01-02", "artist": "Nirvana", "title": "Nevermind", "format": "Vinyl", "year": "1991", "list": "collection"}, {"id": "r185", "date": "2022-01-02", "artist": "Nirvana", "title": "In Utero", "format": "Vinyl", "year": "2003", "list": "collection"}, {"id": "r186", "date": "2022-01-02", "artist": "Orchestral Manoeuvres In Dark", "title": "Junk Culture", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r187", "date": "2022-01-02", "artist": "Orchestral Manoeuvres In Dark", "title": "Crush", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r188", "date": "2022-01-02", "artist": "Robert Palmer", "title": "Riptide", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r189", "date": "2022-01-02", "artist": "Pavement", "title": "Crooked Rain Crooked Rain", "format": "Vinyl", "year": "2010", "list": "collection"}, {"id": "r190", "date": "2025-02-22", "artist": "Pavement", "title": "Brighten Corners", "format": "Vinyl", "year": "2010", "list": "collection"}, {"id": "r191", "date": "2023-09-23", "artist": "Pavement", "title": "Wowee Zowee", "format": "Vinyl", "year": "2020", "list": "collection"}, {"id": "r192", "date": "2022-01-02", "artist": "Pet Shop Boys", "title": "Please", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r193", "date": "2022-01-02", "artist": "Pet Shop Boys", "title": "Actually", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r194", "date": "2022-01-02", "artist": "Pet Shop Boys", "title": "Introspective", "format": "Vinyl", "year": "1988", "list": "collection"}, {"id": "r195", "date": "2022-01-02", "artist": "Tom Petty And Heartbreakers", "title": "Damn Torpedoes", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r196", "date": "2022-01-02", "artist": "Tom Petty And Heartbreakers", "title": "Southern Accents", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r197", "date": "2022-01-02", "artist": "Pixies", "title": "Surfer Rosa", "format": "Vinyl", "year": "2004", "list": "collection"}, {"id": "r198", "date": "2022-01-02", "artist": "Pixies", "title": "Doolittle", "format": "Vinyl", "year": "2004", "list": "collection"}, {"id": "r199", "date": "2022-01-02", "artist": "Pixies", "title": "Into White- BBC Recordings From 1988 And 1989", "format": "Vinyl", "year": "2010", "list": "collection"}, {"id": "r200", "date": "2022-01-02", "artist": "Police", "title": "Reggatta De Blanc", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r201", "date": "2022-01-02", "artist": "Police", "title": "Outlandos D'Amour", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r202", "date": "2022-01-02", "artist": "Police", "title": "Zenyatta Mondatta", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r203", "date": "2022-01-02", "artist": "Police", "title": "Ghost In Machine", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r204", "date": "2022-01-02", "artist": "Police", "title": "Wrapped Around Your Finger", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r205", "date": "2022-01-02", "artist": "Police", "title": "Synchronicity", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r206", "date": "2022-01-02", "artist": "Pop Will Eat Itself", "title": "This Is Day, This Is Hour, This Is This!", "format": "Vinyl", "year": "1989", "list": "collection"}, {"id": "r207", "date": "2022-01-02", "artist": "Power Station", "title": "Power Station 33⅓", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r208", "date": "2022-01-02", "artist": "Pretenders", "title": "Pretenders", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r209", "date": "2026-05-23", "artist": "Pretenders", "title": "Learning to crawl", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r210", "date": "2022-01-02", "artist": "Pretenders", "title": "Get Close", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r211", "date": "2022-01-02", "artist": "Prince And Revolution", "title": "Purple Rain", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r212", "date": "2022-01-02", "artist": "Psychedelic Furs", "title": "Talk Talk Talk", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r213", "date": "2022-01-02", "artist": "Psychedelic Furs", "title": "Mirror Moves", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r214", "date": "2022-01-02", "artist": "Psychedelic Furs", "title": "Midnight To Midnight", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r215", "date": "2022-01-02", "artist": "Public Image Limited", "title": "Happy?", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r216", "date": "2026-01-11", "artist": "R.E.M.", "title": "chronic town", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r217", "date": "2022-01-02", "artist": "R.E.M.", "title": "Murmur", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r218", "date": "2022-01-02", "artist": "R.E.M.", "title": "Reckoning", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r219", "date": "2022-01-02", "artist": "R.E.M.", "title": "Fables Of Reconstruction / Reconstruction Of Fables", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r220", "date": "2022-01-02", "artist": "R.E.M.", "title": "Lifes Rich Pageant", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r221", "date": "2022-01-02", "artist": "R.E.M.", "title": "Dead Letter Office", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r222", "date": "2022-01-02", "artist": "R.E.M.", "title": "Document", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r223", "date": "2022-01-02", "artist": "R.E.M.", "title": "Green", "format": "Vinyl", "year": "1988", "list": "collection"}, {"id": "r224", "date": "2022-01-02", "artist": "R.E.M.", "title": "Eponymous", "format": "Vinyl", "year": "2016", "list": "collection"}, {"id": "r225", "date": "2025-09-20", "artist": "R.E.M.", "title": "Radio Free Europe 2025", "format": "Vinyl", "year": "2025", "list": "collection"}, {"id": "r226", "date": "2022-01-02", "artist": "Gerry Rafferty", "title": "City To City", "format": "Vinyl", "year": "1978", "list": "collection"}, {"id": "r227", "date": "2022-01-02", "artist": "Re-Flex (2)", "title": "Politics Of Dancing", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r228", "date": "2022-01-02", "artist": "Replacements", "title": "Don't Tell A Soul", "format": "Vinyl", "year": "2011", "list": "collection"}, {"id": "r229", "date": "2022-01-02", "artist": "Rolling Stones", "title": "Undercover", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r230", "date": "2022-01-02", "artist": "Rolling Stones", "title": "Exile On Main St.", "format": "Vinyl", "year": "2010", "list": "collection"}, {"id": "r231", "date": "2026-01-11", "artist": "Roxy Music", "title": "First Roxy Music Album", "format": "Vinyl", "year": "1972", "list": "collection"}, {"id": "r232", "date": "2022-01-02", "artist": "Roxy Music", "title": "Country Life", "format": "Vinyl", "year": "1974", "list": "collection"}, {"id": "r233", "date": "2022-01-02", "artist": "Roxy Music", "title": "Siren", "format": "Vinyl", "year": "1975", "list": "collection"}, {"id": "r234", "date": "2022-01-02", "artist": "Roxy Music", "title": "Manifesto", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r235", "date": "2022-01-02", "artist": "Roxy Music", "title": "Flesh + Blood", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r236", "date": "2022-01-02", "artist": "Roxy Music", "title": "Avalon", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r237", "date": "2022-01-02", "artist": "Roxy Music", "title": "Atlantic Years 1973 - 1980", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r238", "date": "2022-01-02", "artist": "Sex Pistols", "title": "Never Mind Bollocks Here's Sex Pistols", "format": "Vinyl", "year": "2008", "list": "collection"}, {"id": "r239", "date": "2022-01-02", "artist": "Simple Minds", "title": "Once Upon A Time", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r240", "date": "2026-04-26", "artist": "Smiths", "title": "1983: Troy Tate abandoned sessions", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r241", "date": "2023-07-02", "artist": "Smiths", "title": "Ask", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r242", "date": "2023-07-18", "artist": "Smiths", "title": "World Won't Listen", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r243", "date": "2022-01-02", "artist": "Smiths", "title": "Smiths", "format": "Vinyl", "year": "2009", "list": "collection"}, {"id": "r244", "date": "2022-01-02", "artist": "Smiths", "title": "Meat Is Murder", "format": "Vinyl", "year": "2009", "list": "collection"}, {"id": "r245", "date": "2022-01-02", "artist": "Smiths", "title": "Strangeways, Here We Come", "format": "Vinyl", "year": "2009", "list": "collection"}, {"id": "r246", "date": "2022-01-02", "artist": "Smiths", "title": "Rank", "format": "Vinyl", "year": "2011", "list": "collection"}, {"id": "r247", "date": "2022-01-02", "artist": "Smiths", "title": "Queen Is Dead", "format": "Vinyl", "year": "2012", "list": "collection"}, {"id": "r248", "date": "2022-01-02", "artist": "Smiths", "title": "Hatful Of Hollow", "format": "Vinyl", "year": "2012", "list": "collection"}, {"id": "r249", "date": "2022-01-02", "artist": "Smiths", "title": "Louder Than Bombs", "format": "Vinyl", "year": "2016", "list": "collection"}, {"id": "r250", "date": "2022-01-02", "artist": "Spandau Ballet", "title": "True", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r251", "date": "2025-02-06", "artist": "Specials", "title": "Specials", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r252", "date": "2025-04-26", "artist": "Squeeze (2)", "title": "U.K. Squeeze", "format": "Vinyl", "year": "1978", "list": "collection"}, {"id": "r253", "date": "2022-01-02", "artist": "Squeeze (2)", "title": "Argybargy", "format": "Vinyl", "year": "1980", "list": "collection"}, {"id": "r254", "date": "2022-01-02", "artist": "Squeeze (2)", "title": "East Side Story", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r255", "date": "2022-01-02", "artist": "Squeeze (2)", "title": "Singles - 45's And Under", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r256", "date": "2026-04-26", "artist": "Stereolab", "title": "Transient Random-Noise Bursts With Announcements", "format": "Vinyl", "year": "1993", "list": "collection"}, {"id": "r257", "date": "2026-04-26", "artist": "Stereolab", "title": "Mars Audiac Quintet", "format": "Vinyl", "year": "1994", "list": "collection"}, {"id": "r258", "date": "2026-04-26", "artist": "Stereolab", "title": "Emperor Tomato Ketchup", "format": "Vinyl", "year": "1996", "list": "collection"}, {"id": "r259", "date": "2026-04-26", "artist": "Stereolab", "title": "Dots And Loops", "format": "Vinyl", "year": "1997", "list": "collection"}, {"id": "r260", "date": "2026-04-26", "artist": "Stereolab", "title": "Cobra And Phases Group Play Voltage In The Milky Night", "format": "Vinyl", "year": "1999", "list": "collection"}, {"id": "r261", "date": "2026-04-26", "artist": "Stereolab", "title": "Sound-Dust", "format": "Vinyl", "year": "2001", "list": "collection"}, {"id": "r262", "date": "2026-04-26", "artist": "Stereolab", "title": "Margerine Eclipse", "format": "Vinyl", "year": "2004", "list": "collection"}, {"id": "r263", "date": "2022-01-02", "artist": "Sting", "title": "Dream Of Blue Turtles", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r264", "date": "2022-01-02", "artist": "Sting", "title": "Bring On Night", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r265", "date": "2022-01-02", "artist": "Sting", "title": "...Nothing Like Sun", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r266", "date": "2022-01-02", "artist": "Sting", "title": "Live At Bataclan", "format": "Vinyl", "year": "2017", "list": "collection"}, {"id": "r267", "date": "2022-01-02", "artist": "Joe Strummer", "title": "Gangsterville", "format": "Vinyl", "year": "2016", "list": "collection"}, {"id": "r268", "date": "2022-01-02", "artist": "Joe Strummer", "title": "Love kills", "format": "Vinyl", "year": "2018", "list": "collection"}, {"id": "r269", "date": "2022-01-02", "artist": "Joe Strummer", "title": "Joe Strummer 001", "format": "Box Set", "year": "2018", "list": "collection"}, {"id": "r270", "date": "2022-01-02", "artist": "Sturgill Simpson", "title": "Cuttin' Grass - Vol. 1 (Butcher Shoppe Sessions)", "format": "Vinyl", "year": "2020", "list": "collection"}, {"id": "r271", "date": "2022-01-02", "artist": "Style Council", "title": "My Ever Changing Moods", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r272", "date": "2022-01-02", "artist": "Suburban Lawns", "title": "Suburban Lawns  ", "format": "Vinyl", "year": "2015", "list": "collection"}, {"id": "r273", "date": "2022-01-02", "artist": "Sugar (5)", "title": "Copper Blue / Beaster", "format": "Vinyl", "year": "2016", "list": "collection"}, {"id": "r274", "date": "2022-01-02", "artist": "Talking Heads", "title": "Little Creatures", "format": "Vinyl", "year": "", "list": "collection"}, {"id": "r275", "date": "2022-01-02", "artist": "Tears For Fears", "title": "Hurting", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r276", "date": "2022-01-02", "artist": "Tears For Fears", "title": "Songs From Big Chair", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r277", "date": "2025-09-20", "artist": "Thompson Twins", "title": "Here's To Future Days", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r278", "date": "2022-01-02", "artist": "U2", "title": "U2 October", "format": "Vinyl", "year": "1981", "list": "collection"}, {"id": "r279", "date": "2022-01-02", "artist": "U2", "title": "Boy", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r280", "date": "2022-01-02", "artist": "U2", "title": "Live \"Under A Blood Red Sky\"", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r281", "date": "2022-01-02", "artist": "U2", "title": "War", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r282", "date": "2022-01-02", "artist": "U2", "title": "Pride (In Name Of Love)", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r283", "date": "2022-01-02", "artist": "U2", "title": "Unforgettable Fire", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r284", "date": "2022-01-02", "artist": "U2", "title": "Unforgettable Fire", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r285", "date": "2022-01-02", "artist": "U2", "title": "Wide Awake In America", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r286", "date": "2022-01-02", "artist": "U2", "title": "Joshua Tree", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r287", "date": "2022-01-02", "artist": "U2", "title": "Rattle And Hum", "format": "Vinyl", "year": "1988", "list": "collection"}, {"id": "r288", "date": "2022-01-02", "artist": "UB40", "title": "Labour Of Love", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r289", "date": "2022-01-02", "artist": "UB40", "title": "Little Baggariddim", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r290", "date": "2022-01-02", "artist": "UB40", "title": "Rat In Kitchen", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r291", "date": "2026-04-11", "artist": "Ultravox", "title": "Quartet", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r292", "date": "2022-01-02", "artist": "Van Halen", "title": "Van Halen", "format": "Vinyl", "year": "1978", "list": "collection"}, {"id": "r293", "date": "2022-01-02", "artist": "Van Halen", "title": "Van Halen II", "format": "Vinyl", "year": "1979", "list": "collection"}, {"id": "r294", "date": "2022-01-02", "artist": "Van Halen", "title": "1984.0", "format": "Vinyl", "year": "1984", "list": "collection"}, {"id": "r295", "date": "2021-05-29", "artist": "Various", "title": "Big Chill - Original Motion Picture Soundtrack", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r296", "date": "2022-01-02", "artist": "Various", "title": "Pretty In Pink (Original Motion Picture Soundtrack)", "format": "Vinyl", "year": "1986", "list": "collection"}, {"id": "r297", "date": "2021-05-29", "artist": "Various", "title": "Out Of Our Idiot", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r298", "date": "2022-01-02", "artist": "Various", "title": "Crow (Original Motion Picture Soundtrack)", "format": "Vinyl", "year": "2019", "list": "collection"}, {"id": "r299", "date": "2025-09-20", "artist": "Suzanne Vega", "title": "Suzanne Vega", "format": "Vinyl", "year": "1985", "list": "collection"}, {"id": "r300", "date": "2022-01-02", "artist": "Suzanne Vega", "title": "Solitude Standing", "format": "Vinyl", "year": "1987", "list": "collection"}, {"id": "r301", "date": "2022-01-02", "artist": "Vince Guaraldi Trio", "title": "A Charlie Brown Christmas", "format": "Vinyl", "year": "2017", "list": "collection"}, {"id": "r302", "date": "2022-01-02", "artist": "Violent Femmes", "title": "Violent Femmes", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r303", "date": "2022-01-02", "artist": "Joe Walsh", "title": "\"But Seriously, Folks...\"", "format": "Vinyl", "year": "1978", "list": "collection"}, {"id": "r304", "date": "2022-01-02", "artist": "Wang Chung", "title": "Points On Curve", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r305", "date": "2022-01-02", "artist": "Ween", "title": "Mollusk", "format": "Vinyl", "year": "2011", "list": "collection"}, {"id": "r306", "date": "2022-01-02", "artist": "Ween", "title": " Live In Toronto Canada Featuring Shit Creek Boys", "format": "Vinyl", "year": "2018", "list": "collection"}, {"id": "r307", "date": "2022-01-02", "artist": "Who", "title": "Who's Next", "format": "Vinyl", "year": "1971", "list": "collection"}, {"id": "r308", "date": "2022-01-02", "artist": "Who", "title": "Who Are You", "format": "Vinyl", "year": "1978", "list": "collection"}, {"id": "r309", "date": "2022-01-02", "artist": "Yazoo", "title": "Upstairs At Eric's", "format": "Vinyl", "year": "1982", "list": "collection"}, {"id": "r310", "date": "2022-01-02", "artist": "Yazoo", "title": "You And Me Both", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r311", "date": "2023-07-02", "artist": "Yazoo", "title": "Nobody's Diary / Situation", "format": "Vinyl", "year": "1983", "list": "collection"}, {"id": "r312", "date": "2026-05-22", "artist": "Neal Young", "title": "After the gold rush", "format": "Vinyl", "year": "1970", "list": "collection"}, {"id": "r313", "date": "2022-01-02", "artist": "Warren Zevon", "title": "Excitable Boy", "format": "Vinyl", "year": "1978", "list": "collection"}];
+const STORAGE_KEY = 'vinyl-records-v1';
+const SHEET_ID = '1oR_Y4_yURp0VoEJPoFu1vZKd3VZoF8d_a9g9AELuhdw';
+
+let records = [];
+let activeList = 'all';
+let activeDecade = 'all';
+let sortMode = 'artist';
+let searchTerm = '';
+
+async function loadRecords(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length > 0){
+        records = parsed;
+        return;
+      }
+      // stored value exists but is empty/corrupted — fall through to reseed
+    }
+  }catch(e){ /* not found yet or storage unavailable */ }
+  records = SEED_RECORDS.slice();
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); }catch(e){}
+}
+
+async function saveRecords(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); }catch(e){
+    console.error('save failed', e);
+  }
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=> t.classList.remove('show'), 3200);
+}
+
+function decadeOf(yearStr){
+  const y = parseInt(yearStr, 10);
+  if(!y || isNaN(y)) return null;
+  return Math.floor(y/10)*10;
+}
+
+function formatBadgeClass(fmt){
+  const f = (fmt||'').toLowerCase();
+  if(f.includes('cd')) return 'cd';
+  if(f.includes('box')) return 'box';
+  return 'vinyl';
+}
+
+function renderStats(){
+  const total = records.length;
+  const collection = records.filter(r=>r.list==='collection').length;
+  const wishlist = records.filter(r=>r.list==='wishlist').length;
+  const artists = new Set(records.map(r=>r.artist)).size;
+  const bar = document.getElementById('statsBar');
+  bar.innerHTML = `
+    <div class="stat"><div class="num">${total}</div><div class="label">Total records</div></div>
+    <div class="stat"><div class="num">${collection}</div><div class="label">In collection</div></div>
+    <div class="stat"><div class="num">${wishlist}</div><div class="label">On wishlist</div></div>
+    <div class="stat"><div class="num">${artists}</div><div class="label">Artists</div></div>
+  `;
+}
+
+function renderTabs(){
+  const tabs = document.getElementById('listTabs');
+  const opts = [['all','All'],['collection','Collection'],['wishlist','Wishlist']];
+  tabs.innerHTML = opts.map(([val,label])=>
+    `<button class="tab ${activeList===val?'active':''}" data-list="${val}">${label}</button>`
+  ).join('');
+  tabs.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ activeList = btn.dataset.list; renderTabs(); renderGrid(); });
+  });
+}
+
+function renderDecadeOptions(){
+  const sel = document.getElementById('decadeFilter');
+  const decades = new Set();
+  records.forEach(r=>{ const d = decadeOf(r.year); if(d) decades.add(d); });
+  const sorted = Array.from(decades).sort((a,b)=>a-b);
+  sel.innerHTML = '<option value="all">All decades</option>' +
+    sorted.map(d=>`<option value="${d}">${d}s</option>`).join('');
+}
+
+function getFiltered(){
+  let list = records.slice();
+  if(activeList !== 'all') list = list.filter(r=>r.list===activeList);
+  if(activeDecade !== 'all') list = list.filter(r=>decadeOf(r.year)===parseInt(activeDecade,10));
+  if(searchTerm){
+    const s = searchTerm.toLowerCase();
+    list = list.filter(r => r.artist.toLowerCase().includes(s) || r.title.toLowerCase().includes(s));
+  }
+  if(sortMode === 'artist'){
+    list.sort((a,b)=> a.artist.localeCompare(b.artist) || (parseInt(a.year)||0)-(parseInt(b.year)||0));
+  } else if(sortMode === 'year'){
+    list.sort((a,b)=> (parseInt(a.year)||9999)-(parseInt(b.year)||9999));
+  } else if(sortMode === 'dateAdded'){
+    list.sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+  }
+  return list;
+}
+
+function renderGrid(){
+  const grid = document.getElementById('grid');
+  const filtered = getFiltered();
+  document.getElementById('countLine').textContent = `${filtered.length} record${filtered.length===1?'':'s'} shown`;
+
+  if(filtered.length === 0){
+    grid.innerHTML = '';
+    grid.parentElement.querySelectorAll('.empty').forEach(e=>e.remove());
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.innerHTML = `<div class="disc"></div><h3>Nothing here</h3><div>Try a different search or filter.</div>`;
+    grid.after(empty);
+    return;
+  }
+  document.querySelectorAll('.empty').forEach(e=>e.remove());
+
+  grid.innerHTML = filtered.map(r => `
+    <div class="card">
+      <div class="card-year">${r.year || '—'}</div>
+      <div class="card-artist">${escapeHtml(r.artist)}</div>
+      <div class="card-title">${escapeHtml(r.title)}</div>
+      <div class="card-footer">
+        <span class="badge ${formatBadgeClass(r.format)}">${escapeHtml(r.format||'Vinyl')}</span>
+        <span class="list-badge ${r.list}">${r.list}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
+
+function openModal(){ document.getElementById('modalOverlay').classList.add('open'); document.getElementById('fArtist').focus(); }
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('addForm').reset();
+}
+
+async function handleAdd(e){
+  e.preventDefault();
+  const artist = document.getElementById('fArtist').value.trim();
+  const title = document.getElementById('fTitle').value.trim();
+  const year = document.getElementById('fYear').value.trim();
+  const format = document.getElementById('fFormat').value;
+  const list = document.getElementById('fList').value;
+  if(!artist || !title) return;
+
+  const newRecord = {
+    id: 'r' + Date.now(),
+    date: new Date().toISOString().slice(0,10),
+    artist, title, format, year, list
+  };
+  records.push(newRecord);
+  await saveRecords();
+  renderStats();
+  renderDecadeOptions();
+  renderGrid();
+  closeModal();
+  showToast(`Added "${title}" to your ${list}. Don't forget to add it to your Google Sheet too — tap the link above.`);
+}
+
+function wireControls(){
+  document.getElementById('searchInput').addEventListener('input', (e)=>{
+    searchTerm = e.target.value; renderGrid();
+  });
+  document.getElementById('decadeFilter').addEventListener('change', (e)=>{
+    activeDecade = e.target.value; renderGrid();
+  });
+  document.getElementById('sortSelect').addEventListener('change', (e)=>{
+    sortMode = e.target.value; renderGrid();
+  });
+  document.getElementById('openAddBtn').addEventListener('click', openModal);
+  document.getElementById('closeModal').addEventListener('click', closeModal);
+  document.getElementById('cancelAdd').addEventListener('click', closeModal);
+  document.getElementById('modalOverlay').addEventListener('click', (e)=>{
+    if(e.target.id === 'modalOverlay') closeModal();
+  });
+  document.getElementById('addForm').addEventListener('submit', handleAdd);
+  document.getElementById('resetBtn').addEventListener('click', async () => {
+    if(confirm('Reset the app back to your original 314-record collection? This clears any records you added locally in the app (your Google Sheet is not affected).')){
+      records = SEED_RECORDS.slice();
+      await saveRecords();
+      renderStats(); renderTabs(); renderDecadeOptions(); renderGrid();
+      document.getElementById('searchInput').value = '';
+      searchTerm = '';
+      showToast('Reset complete — showing your original collection.');
+    }
+  });
+}
+
+async function init(){
+  try{
+    await loadRecords();
+  }catch(e){
+    console.error('init load failed, using seed data', e);
+    records = SEED_RECORDS.slice();
+  }
+  renderStats();
+  renderTabs();
+  renderDecadeOptions();
+  renderGrid();
+  wireControls();
+  document.getElementById('lastSync').textContent = `${records.length} records loaded`;
+}
+
+init();
+</script>
+</body>
+</html>
