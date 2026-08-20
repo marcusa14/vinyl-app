@@ -240,6 +240,7 @@
       </div>
     </div>
     <div class="header-actions">
+      <button class="sheet-link" id="exportBtn" style="cursor:pointer;">⬇ export csv</button>
       <button class="sheet-link" id="resetBtn" style="cursor:pointer;">↺ reset data</button>
       <a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1oR_Y4_yURp0VoEJPoFu1vZKd3VZoF8d_a9g9AELuhdw/edit" target="_blank" rel="noopener">↗ open source sheet</a>
     </div>
@@ -487,6 +488,34 @@ async function handleAdd(e){
   showToast(`Added "${title}" to your ${list}. Don't forget to add it to your Google Sheet too — tap the link above.`);
 }
 
+function csvEscape(val){
+  const s = (val == null ? '' : String(val));
+  if(s.includes(',') || s.includes('"') || s.includes('\n')){
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  return s;
+}
+
+function exportToCSV(){
+  const headers = ['dateAdded','artist','title','format','year','list'];
+  const lines = [headers.join(',')];
+  records.forEach(r => {
+    lines.push([r.date, r.artist, r.title, r.format, r.year, r.list].map(csvEscape).join(','));
+  });
+  const csvContent = lines.join('\r\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `vinyl-collection-${stamp}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  showToast(`Exported ${records.length} records as CSV.`);
+}
+
 function wireControls(){
   document.getElementById('searchInput').addEventListener('input', (e)=>{
     searchTerm = e.target.value; renderGrid();
@@ -504,6 +533,7 @@ function wireControls(){
     if(e.target.id === 'modalOverlay') closeModal();
   });
   document.getElementById('addForm').addEventListener('submit', handleAdd);
+  document.getElementById('exportBtn').addEventListener('click', exportToCSV);
   document.getElementById('resetBtn').addEventListener('click', async () => {
     if(confirm('Reset the app back to your original 314-record collection? This clears any records you added locally in the app (your Google Sheet is not affected).')){
       records = SEED_RECORDS.slice();
